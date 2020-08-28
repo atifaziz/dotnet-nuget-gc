@@ -8,7 +8,21 @@ namespace NugetCacheCleaner
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
+        {
+            try
+            {
+                Wain(args);
+                return 0;
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e.GetBaseException().Message);
+                return 0xff;
+            }
+        }
+
+        static void Wain(IEnumerable<string> args)
         {
             var force = false;
             var showHelp = false;
@@ -20,16 +34,7 @@ namespace NugetCacheCleaner
                 { "?|h|help", "show this message and exit", v => showHelp = v != null },
             };
 
-            List<string> extra;
-            try
-            {
-                extra = options.Parse(args);
-            }
-            catch (FormatException e)
-            {
-                Console.Error.WriteLine(e.Message);
-                return;
-            }
+            var extra = options.Parse(args);
 
             if (showHelp)
             {
